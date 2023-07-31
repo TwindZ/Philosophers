@@ -6,11 +6,24 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/07/31 12:37:09 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/07/31 16:51:58 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	ft_freenull(char **ptr)
+{
+	if (*ptr != NULL)
+		free(*ptr);
+	*ptr = NULL;
+}
+
+int err_handler(char *msg)
+{
+	printf("%s", msg);
+	return (-1);
+}
 
 void	print_param(t_data *data)
 {
@@ -41,39 +54,32 @@ long int ft_max_min(long int nbr)
 {
 	if(nbr >= -2147483648 && nbr <= 2147483647)
 		return(1);
-	return(0)
+	return(0);
+}
+
+void	check_max_param(int *param, char *arg)
+{
+	long int nbr;
+	
+	nbr = ft_atoi(arg);
+	if (ft_max_min(nbr))
+		*param = nbr;
+	else
+		*param = -1;
 }
 
 int	build_base_param(t_data *data, char **argv)
 {
-	long int nbr;
-	
-	nbr = ft_atoi(argv[1]);
-	if (ft_max_min(nbr))
-		data->param.nb_philo = nbr;
-	else
-		return (-1);
-	nbr = ft_atoi(argv[2]);
-	if (ft_max_min(nbr))
-		data->param.nb_philo = nbr;
-	else
-		return (-1);
-	nbr = ft_atoi(argv[3]);
-	if (ft_max_min(nbr))
-		data->param.nb_philo = nbr;
-	else
-		return (-1);
-	nbr = ft_atoi(argv[4]);
-	if (ft_max_min(nbr))
-		data->param.nb_philo = nbr;
-	if (argv[5])
-	{
-		nbr = ft_atoi(argv[5]);
-		if (ft_max_min(nbr))
-			data->param.nb_time = nbr;
-		else
-			return(-1);
-	}
+	check_max_param(&data->param.nb_philo, argv[1]);
+	check_max_param(&data->param.ttd, argv[2]);
+	check_max_param(&data->param.tte, argv[3]);
+	check_max_param(&data->param.tts, argv[4]);
+	check_max_param(&data->param.nb_time, argv[5]);
+	if (data->param.nb_philo == -1 || data->param.ttd == -1 
+			|| data->param.tte == -1 || data->param.tts == -1 
+			|| data->param.nb_time == -1)
+			return (err_handler(ERRMAXVAL));
+	return (0);
 }
 
 t_data *ft_init_data(char **argv)
@@ -85,12 +91,14 @@ t_data *ft_init_data(char **argv)
 		data = ft_calloc(1, sizeof(data));
 		if(!data)
 			return (NULL);
-			build_base_param(data, argv);
-
+		if(build_base_param(data, argv) == -1)
+		{
+			free(data);
+			return (NULL);
+		}	
 	}
 	return(data);
 }
-
 
 int	ft_parse_argv(char **argv)
 {
@@ -111,23 +119,35 @@ int	ft_parse_argv(char **argv)
 	}
 	return (1);
 }
+void	time_calc(t_data *data, struct timeval time)
+{
+	gettimeofday(&time, NULL);
+	// data->time.count_usec = (((time.tv_sec - data->time.start_sec) * 1000));
+	data->time.count_usec = (((time.tv_usec - data->time.start_usec) / 1000));
+}
 
 int main(int argc, char **argv)
 {
 	t_data *data;
+	struct timeval time;
 	
-	if(argc < 5 || argc > 6)
-	{
-		printf("parameter error\n./philo [number_of_philosophers] [time_to_die] [time_to_eat] [time_to_sleep] [number_of_times_each_philosopher_must_eat(optional)]\n");
-		return(1);
-	}
+	if(argc < 5 || argc > 6)		
+		return(err_handler(ERRNBPARAM));
 	if(ft_parse_argv(argv) == 0)
-	{
-		printf("only positif numeric argument are used by philo\n");
-		return(2);
-	}
+		return(err_handler(ERRONLYNB));
 	data = ft_init_data(argv);
 	if(!data)
-		exit(-1);
+		return (-1);
 	print_param(data);
+	if(gettimeofday(&time, NULL) == -1)
+		return (-1);
+	data->time.start_sec = time.tv_sec;
+	data->time.start_usec = time.tv_usec;
+	while(1)
+	{
+		time_calc(data, time);
+		printf("%ld\n", data->time.count_usec);
+	}
+		
+	return (0);
 }

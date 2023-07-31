@@ -6,13 +6,15 @@
 #    By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/04 10:27:08 by emlamoth          #+#    #+#              #
-#    Updated: 2023/07/31 10:41:23 by emlamoth         ###   ########.fr        #
+#    Updated: 2023/07/31 13:34:33 by emlamoth         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS =	main.c		\
 		ft_atoi.c	\
-	
+
+HDRS = philo.h
+
 OBJS_DIR = ./objs_philo/
 OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)
 
@@ -28,7 +30,7 @@ NC = \033[0;0m
 
 all:$(NAME)
 
-$(OBJS_DIR)%.o:%.c
+$(OBJS_DIR)%.o:%.c $(HDRS)
 	@mkdir -p $(OBJS_DIR)
 	@$(CC) $(CFLAGS) -c -o $@ $<
 	
