@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/07/31 16:51:58 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/07/31 19:51:03 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,8 @@ int	ft_parse_argv(char **argv)
 void	time_calc(t_data *data, struct timeval time)
 {
 	gettimeofday(&time, NULL);
-	// data->time.count_usec = (((time.tv_sec - data->time.start_sec) * 1000));
-	data->time.count_usec = (((time.tv_usec - data->time.start_usec) / 1000));
+	data->time.count_usec = (((time.tv_usec - data->time.start_usec) / 1000) + ((time.tv_sec - data->time.start_sec) * 1000));
+	usleep(1);
 }
 
 int main(int argc, char **argv)
