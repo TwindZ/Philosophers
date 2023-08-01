@@ -3,14 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/07/31 19:51:03 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/01 16:37:59 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+t_philo	*new_philo_philo(t_data *data)
+{
+	t_philo	*philo;
+
+	philo = malloc(sizeof(t_philo));
+	if (!philo)
+		return (NULL);
+	philo->right = NULL;
+	return (philo);
+}
+
+void	add_philo(t_philo **philo, t_philo *new_philo)
+{
+	t_philo	*last;
+
+	if (philo)
+	{
+		if (*philo == NULL)
+			*philo = new_philo;
+		else
+		{
+			last = ft_lstlast(*philo);
+			last->right = new_philo;
+		}
+	}
+}
 
 void	ft_freenull(char **ptr)
 {
@@ -19,11 +46,13 @@ void	ft_freenull(char **ptr)
 	*ptr = NULL;
 }
 
+
 int err_handler(char *msg)
 {
 	printf("%s", msg);
 	return (-1);
 }
+
 
 void	print_param(t_data *data)
 {
@@ -33,6 +62,7 @@ void	print_param(t_data *data)
 	printf("tts :%d\n", data->param.tts);
 	printf("nb_time :%d\n", data->param.nb_time);
 }
+
 
 void	*ft_calloc(size_t count, size_t size)
 {
@@ -100,7 +130,7 @@ t_data *ft_init_data(char **argv)
 	return(data);
 }
 
-int	ft_parse_argv(char **argv)
+int	digit_argv(char **argv)
 {
 	int i;
 	int j;
@@ -126,28 +156,70 @@ void	time_calc(t_data *data, struct timeval time)
 	usleep(1);
 }
 
+// void	*routine()
+// {
+// 	printf("salut\n");
+// 	return(NULL);
+// }
+
+// void create_thread(t_data *data)
+// {
+// 	int size;
+
+// 	size = data->param.nb_philo;
+// 	data->thread = ft_calloc(data->param.nb_philo + 1, sizeof(pthread_t *));
+// 	while(size > 0)
+// 	{
+// 		data->thread[size] = ft_calloc(1, sizeof(pthread_t));
+// 		pthread_create(&data->thread[size], NULL, &routine, NULL);
+// 		size--;
+// 	}
+// }
+
+// void	join_thread(t_data *data)
+// {
+// 	int size;
+
+// 	size = data->param.nb_philo;
+// 	while(size > 0)
+// 	{
+// 		pthread_join(data->thread[size], NULL);
+// 		size--;
+// 	}
+// }
+
+void	create_philo(t_data *data)
+{
+	int size;
+
+	size = data->param.nb_philo;
+	
+}
+
 int main(int argc, char **argv)
 {
 	t_data *data;
-	struct timeval time;
+	// struct timeval time;
 	
 	if(argc < 5 || argc > 6)		
 		return(err_handler(ERRNBPARAM));
-	if(ft_parse_argv(argv) == 0)
+	if(digit_argv(argv) == 0)
 		return(err_handler(ERRONLYNB));
 	data = ft_init_data(argv);
 	if(!data)
 		return (-1);
 	print_param(data);
-	if(gettimeofday(&time, NULL) == -1)
-		return (-1);
-	data->time.start_sec = time.tv_sec;
-	data->time.start_usec = time.tv_usec;
-	while(1)
-	{
-		time_calc(data, time);
-		printf("%ld\n", data->time.count_usec);
-	}
-		
+	
+
+	// if(gettimeofday(&time, NULL) == -1)
+	// 	return (-1);
+	// data->time.start_sec = time.tv_sec;
+	// data->time.start_usec = time.tv_usec;
+	// while(1)
+	// {
+	// 	time_calc(data, time);
+	// 	printf("%ld\n", data->time.count_usec);
+	// }
+	
 	return (0);
 }

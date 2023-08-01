@@ -6,7 +6,7 @@
 #    By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/04 10:27:08 by emlamoth          #+#    #+#              #
-#    Updated: 2023/07/31 13:34:33 by emlamoth         ###   ########.fr        #
+#    Updated: 2023/08/01 09:46:56 by emlamoth         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)
 
 NAME = philo
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 CC = gcc
 

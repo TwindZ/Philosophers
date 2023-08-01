@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/07/31 16:48:00 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/01 16:33:30 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <libc.h>
-// # include <time.h>
 # include <sys/time.h>
+# include <pthread.h>
 
 # define ERRNBPARAM "parameter error\n./philo [number_of_philosophers] \
 [time_to_die] [time_to_eat] [time_to_sleep] \
@@ -45,13 +45,26 @@ typedef struct s_time
 	long int	count_usec;
 }				t_time;
 
+typedef struct s_philo
+{
+	int				dead;
+	int				ttd;
+	int				tte;
+	int				tts;
+	pthread_mutex_t fork;
+	pthread_t 		thread;
+	struct s_philo 	*right;
+}				t_philo;
+
 typedef struct s_data
 {
-	t_param	param;
-	t_time	time;
+	t_param		param;
+	t_time		time;
+	t_philo		*philo;
 }				t_data;
 
 long int	ft_atoi(const char *str);
 int			ft_isdigit(int c);
+t_philo		*new_philo(t_data *data);
 
 #endif
