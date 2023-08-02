@@ -6,21 +6,27 @@
 #    By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/04 10:27:08 by emlamoth          #+#    #+#              #
-#    Updated: 2023/08/01 09:46:56 by emlamoth         ###   ########.fr        #
+#    Updated: 2023/08/02 16:41:51 by emlamoth         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS =	main.c		\
+SRCS =	univers.c	\
+		debug.c		\
 		ft_atoi.c	\
+		init_data.c	\
+		main.c		\
+		util.c		\
+		util_2.c	\
 
-HDRS = philo.h
+HDRS = ./srcs/philo.h
 
-OBJS_DIR = ./objs_philo/
-OBJS = $(SRCS:%.c=$(OBJS_DIR)%.o)
+SRCS_DIR = ./srcs/
+OBJS_DIR = ./srcs/objs_philo/
+OBJS = $(SRCS:$(SCRS_DIR)%.c=$(OBJS_DIR)%.o)
 
 NAME = philo
 
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror -pthread -g
 
 CC = gcc
 
@@ -30,18 +36,18 @@ NC = \033[0;0m
 
 all:$(NAME)
 
-$(OBJS_DIR)%.o:%.c $(HDRS)
+$(OBJS_DIR)%.o:$(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
 	@$(CC) $(CFLAGS) -c -o $@ $<
 	
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(HDRS)
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 	@echo "${GREEN}PHILO COMPILED${NC}"
 
 leak: CFLAGS += -g
 leak: all
 	@reset
-	valgrind --leak-check=full --show-leak-kinds=all -- ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all -- ./$(NAME) 2 200 200 200
 
 clean:
 	@rm -rf $(OBJS_DIR)
