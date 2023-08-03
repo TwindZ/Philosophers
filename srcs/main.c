@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/02 17:10:48 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/03 16:13:40 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,59 +26,61 @@ int	time_calc(t_data *data)
 	
 }
 
-void	*routine(void *dataptr)
+void	*routine(void *philoptr)
 {
-	t_data *data;
+	t_philo *philo;
 
-	data = dataptr;
-	write(1, "@\n", 2);
-	pthread_mutex_lock(&data->main_lock);
-	if(data->philo->id % 2 == 0)
-		printf("paire");
-	else
-		printf("impaire");
-	pthread_mutex_unlock(&data->main_lock);
+	philo = (t_philo *)philoptr;
+	pthread_mutex_lock(&philo->left_fork);
+	pthread_mutex_lock(&philo->right_fork);
+	printf("%d\n", philo->id);
+	// pthread_mutex_unlock(&philo->left_fork);
+	// pthread_mutex_unlock(&philo->right_fork);
 	return (NULL);
 }
 
 
-void	join_thread(t_data *data)
-{
-	t_philo *temp;
+// void	join_thread(t_data *data)
+// {
+// 	t_philo *temp;
 	
-	int i;
-	temp = data->philo;
-	i = data->param.nb_philo;
-	while(--i)
-	{
-		pthread_join(temp->thread, NULL);
-		temp = temp->right;
-	}
-}
+// 	int i;
+// 	temp = data->philo;
+// 	i = data->param.nb_philo;
+// 	while(--i)
+// 	{
+// 		pthread_join(temp->thread, NULL);
+// 		temp = temp->right;
+// 	}
+// }
+
+// void	ft_action()
+// {
+	
+// }
+
 
 int main(int argc, char **argv)
 {
-	t_data *data;
-	
-	
+	t_data data;
 	if(argc < 5 || argc > 6)		
 		return(err_handler(ERRNBPARAM));
 	if(digit_argv(argv) == 0)
 		return(err_handler(ERRONLYNB));
-	data = ft_init_data(argv);
-	if(!data)
-		return (-1);
-	print_param(data);
-	bigbang(data);
-	int i = 0;
+	ft_init_data(&data, argv);
+	ft_init_philo(&data, data.philo);
+	print_param(&data);
 	
-	while(i++ < data->param.nb_philo)
+	for(int i = 0; i < data.param.nb_philo; i++)
 	{
-		pthread_create(&data->philo->thread, NULL, &routine, NULL);
+		pthread_create(&data.thread[i], NULL, &routine, &data.philo[i]);
+		sleep(2);
+	// 	printf("*************************************************\n");
+	// 	printf("philo #%d status : %d\n", data.philo[i].id, data.philo[i].dead);
+	// 	printf("left fork :%p right fork : %p\n", &data.philo[i].left_fork, &data.philo[i].right_fork);
 	}
-	
-	
-	join_thread(data);
+		
+	// join_thread(data);
 	// while(1)
 	// {
 	// 	if(time_calc(data) % 500 == 0)
@@ -86,6 +88,5 @@ int main(int argc, char **argv)
 	// 	if(time_calc(data) % 1000 == 0)
 	// 		printf("salut");
 	// }
-	bigcrunch(data);
 	return (0);
 }

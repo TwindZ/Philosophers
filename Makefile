@@ -6,17 +6,15 @@
 #    By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/04 10:27:08 by emlamoth          #+#    #+#              #
-#    Updated: 2023/08/02 16:41:51 by emlamoth         ###   ########.fr        #
+#    Updated: 2023/08/03 13:07:59 by emlamoth         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS =	univers.c	\
-		debug.c		\
-		ft_atoi.c	\
-		init_data.c	\
+SRCS =	debug.c		\
+		init.c	\
 		main.c		\
 		util.c		\
-		util_2.c	\
+		util2.c	\
 
 HDRS = ./srcs/philo.h
 

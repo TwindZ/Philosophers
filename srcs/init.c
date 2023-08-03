@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_data.c                                        :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/02 15:48:03 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/03 15:57:27 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,23 +62,42 @@ int	build_base_param(t_data *data, char **argv)
 			return (err_handler(ERRMAXVAL));
 	return (0);
 }
-
-t_data *ft_init_data(char **argv)
+t_data	*struct_data(t_data *ptr)
 {
-	static t_data *data;
-	struct timeval time;
-	
-	if(!data)
-	{
-		data = ft_calloc(1, sizeof(t_data));
-		if(!data)
-			return (NULL);
-		if(build_base_param(data, argv) == -1)
-			return (ft_freenull((void **)&data));
-		if(gettimeofday(&time, NULL) == -1)
-			return (ft_freenull((void **)&data));
-		data->time.start_sec = time.tv_sec;
-		data->time.start_usec = time.tv_usec;
-	}
+	static t_data	*data = NULL;
+
+	if(ptr)
+		data = ptr;
+	return (data);
+}
+
+
+t_data *ft_init_data(t_data *data, char **argv)
+{
+	build_base_param(data, argv);
+
+	struct_data(data);
 	return(data);
+}
+
+void	ft_init_philo(t_data *data, t_philo *philo)
+{
+	int i;
+	
+	i = 0;
+	while(i < data->param.nb_philo)
+	{
+		philo[i].id = i + 1;
+		philo[i].ttd = data->param.ttd;
+		philo[i].tte = data->param.tte;
+		philo[i].tts = data->param.tts;
+		philo[i].tts = data->param.nb_time;
+		philo[i].dead = false;
+		pthread_mutex_init(&philo[i].left_fork, NULL);
+		if(i == data->param.nb_philo - 1)
+			philo[0].right_fork = philo[i].left_fork;
+		else
+			philo[i + 1].right_fork = philo[i].left_fork;
+		i++;
+	}
 }

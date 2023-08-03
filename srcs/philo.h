@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/02 16:42:12 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/03 15:07:15 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include <libc.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <stdbool.h>
 
 //---------- STRUCT
 typedef struct s_param
@@ -51,20 +52,21 @@ typedef struct s_time
 typedef struct s_philo
 {
 	int				id;
-	int				dead;
+	pthread_mutex_t left_fork;
+	pthread_mutex_t right_fork;
+	bool			dead;
 	int				ttd;
 	int				tte;
 	int				tts;
-	pthread_mutex_t fork;
-	pthread_t 		thread;
-	struct s_philo 	*right;
+	int				nb_time;
 }				t_philo;
 
 typedef struct s_data
 {
 	t_param			param;
 	t_time			time;
-	t_philo			*philo;
+	t_philo			philo[200];
+	pthread_t		thread[200];
 	pthread_mutex_t	main_lock;
 }				t_data;
 
@@ -87,16 +89,18 @@ int			digit_argv(char **argv);
 long int	ft_max_min(long int nbr);
 void		check_max_param(int *param, char *arg);
 int			build_base_param(t_data *data, char **argv);
-t_data		*ft_init_data(char **argv);
+t_data		*ft_init_data(t_data *data, char **argv);
+t_data		*struct_data(t_data *ptr);
 
 //---------- main.c
 void		*routine(void	*data);
+void		ft_init_philo(t_data *data, t_philo *philo);
+int			time_calc(t_data *data);
+void		ft_init_fork(t_data *data);
 
 //---------- utility.c
 long int	ft_max_min(long int nbr);
-void		*ft_freenull(void **ptr);
 int			err_handler(char *msg);
-void		*ft_calloc(size_t count, size_t size);
 
 
 #endif
