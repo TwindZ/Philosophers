@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/03 15:07:15 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/07 11:01:58 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,13 @@ typedef struct s_philo
 {
 	int				id;
 	pthread_mutex_t left_fork;
-	pthread_mutex_t right_fork;
+	pthread_mutex_t *right_fork;
 	bool			dead;
 	int				ttd;
 	int				tte;
 	int				tts;
 	int				nb_time;
+	struct	timeval	time;
 }				t_philo;
 
 typedef struct s_data
@@ -95,7 +96,7 @@ t_data		*struct_data(t_data *ptr);
 //---------- main.c
 void		*routine(void	*data);
 void		ft_init_philo(t_data *data, t_philo *philo);
-int			time_calc(t_data *data);
+int			time_calc(struct timeval start_time);
 void		ft_init_fork(t_data *data);
 
 //---------- utility.c

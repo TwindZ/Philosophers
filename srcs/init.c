@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/03 15:57:27 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/07 13:10:22 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ int	build_base_param(t_data *data, char **argv)
 	check_max_param(&data->param.ttd, argv[2]);
 	check_max_param(&data->param.tte, argv[3]);
 	check_max_param(&data->param.tts, argv[4]);
-	check_max_param(&data->param.nb_time, argv[5]);
+	if(argv[5])
+		check_max_param(&data->param.nb_time, argv[5]);
+	else
+		data->param.nb_time = -2;
 	if (data->param.nb_philo == -1 || data->param.ttd == -1 
 			|| data->param.tte == -1 || data->param.tts == -1 
 			|| data->param.nb_time == -1)
@@ -91,13 +94,13 @@ void	ft_init_philo(t_data *data, t_philo *philo)
 		philo[i].ttd = data->param.ttd;
 		philo[i].tte = data->param.tte;
 		philo[i].tts = data->param.tts;
-		philo[i].tts = data->param.nb_time;
+		philo[i].nb_time = data->param.nb_time;
 		philo[i].dead = false;
 		pthread_mutex_init(&philo[i].left_fork, NULL);
 		if(i == data->param.nb_philo - 1)
-			philo[0].right_fork = philo[i].left_fork;
+			philo[0].right_fork = &philo[i].left_fork;
 		else
-			philo[i + 1].right_fork = philo[i].left_fork;
+			philo[i + 1].right_fork = &philo[i].left_fork;
 		i++;
 	}
 }
