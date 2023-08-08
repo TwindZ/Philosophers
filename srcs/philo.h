@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/07 21:39:10 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/08 17:14:35 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_philo
 	int				id;
 	pthread_mutex_t left_fork;
 	pthread_mutex_t *right_fork;
-	bool			dead;
+	bool			*dead;
 	int				ttd;
 	int				tte;
 	int				tts;
@@ -60,8 +60,13 @@ typedef struct s_data
 	t_param			param;
 	t_philo			philo[200];
 	pthread_t		thread[200];
-	pthread_mutex_t	main_lock;
+	pthread_mutex_t	print_lock;
+	pthread_mutex_t	dead_lock;
+	pthread_mutex_t	meals_lock;
 	struct	timeval	time;
+	bool			dead;
+	int				meals;
+	
 }				t_data;
 
 //---------- univers.c

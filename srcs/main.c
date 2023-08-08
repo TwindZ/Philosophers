@@ -6,12 +6,11 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/08 10:22:00 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/08 17:30:45 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
 
 int	time_calc(struct timeval start_time)
 {
@@ -26,6 +25,54 @@ int	time_calc(struct timeval start_time)
 	
 }
 
+bool	mutex_meals(int opt)
+{
+	t_data	*data;
+	bool	status;
+	
+	status = false;
+	data = struct_data(NULL);
+	pthread_mutex_lock(&data->meals_lock);
+	if(opt)
+		data->meals++;
+	else
+		if(data->meals >= data->param.nb_time * data->param.nb_philo)
+			status = true;
+		else
+			status = false;
+	pthread_mutex_unlock(&data->meals_lock);
+	return(status);
+}
+
+bool	mutex_dead(int opt)
+{
+	t_data	*data;
+	bool	status;
+	
+	status = false;
+	data = struct_data(NULL);
+	pthread_mutex_lock(&data->dead_lock);
+	if(opt)
+		data->dead = true;
+	else
+		status = data->dead;
+	pthread_mutex_unlock(&data->dead_lock);
+	return(status);
+}
+
+void	mutex_print(int time, int philo_id, char *msg)
+{
+	t_data *data;
+	
+	data = struct_data(NULL);
+	if(!mutex_dead(0))
+	{
+		pthread_mutex_lock(&data->print_lock);
+		printf("%d %d %s", time, philo_id, msg);
+		pthread_mutex_unlock(&data->print_lock);
+	}
+	
+}
 //  timestamp_in_ms X has taken a fork
 // ◦ timestamp_in_ms X is eating
 // ◦ timestamp_in_ms X is sleeping
@@ -47,87 +94,58 @@ void	*routine(void *philoptr)
 	meals = 0;
 	if(((philo->id % 2)) == 0)
 	{
-		printf("%d %d is sleeping\n",
-			time_calc(philo->time), philo->id);
-		// if(life - philo->tts > 0)
-			while(time_calc(philo->time) != philo->tts)
-				usleep(1);
-		// else
-		// {
-		// 	while(time_calc(philo->time) != life)
-		// 	;
-		// 	philo->dead = true;
-		// }	
-				
+		mutex_print(time_calc(philo->time), philo->id, "is thinking\n");
+		while(1)
+		{
+			if(time_calc(philo->time) >= philo->tte)
+				break;
+			// usleep(100);
+		}
 	}
 	elapsed = time_calc(philo->time);
 	while(1 && meals != philo->nb_time)
 	{	
-		ready = 1;
-		while(ready)
+		pthread_mutex_lock(&philo->left_fork);
+		mutex_print(time_calc(philo->time), philo->id, "has taken a fork\n");
+		pthread_mutex_lock(philo->right_fork);
+		mutex_print(time_calc(philo->time), philo->id, "has taken a fork\n");
+		mutex_print(time_calc(philo->time), philo->id, "is eating\n");
+		life -= time_calc(philo->time);
+		while(mutex_dead(0) == false)
 		{
-			if(!(pthread_mutex_lock(&philo->left_fork) == -1))
-			{
-				if(!(pthread_mutex_lock(philo->right_fork) == -1))
-					ready = 0;
-				else
-					pthread_mutex_unlock(&philo->left_fork);
-				// if((life - time_calc(philo->time) - elapsed) < 0)
-				// 	philo->dead = true;
-				// printf("%d - %d - %d = %d\n", life, time_calc(philo->time), elapsed, (life - time_calc(philo->time) - elapsed));
-			}
-			// if(time_calc(philo->time) - elapsed >)
-		}
-		printf("%d %d has taken a fork\n",
-			time_calc(philo->time), philo->id);
-		elapsed = time_calc(philo->time);
-		printf("%d %d is eating\n",
-			time_calc(philo->time), philo->id);
-		while(1)
-		{
-			// if((time_calc(philo->time) - elapsed - philo->tte) < 0)
-			// {
-			// 	while(time_calc(philo->time) < elapsed + philo->tts)
-			// 	;
-			// 	philo->dead = true;
-			// }
-			if(time_calc(philo->time) == (philo->tte + elapsed))
+			if(life < time_calc(philo->time) - elapsed - philo->tts)
+				mutex_dead(1);
+			// printf("%d\n", philo->tts);
+			if(time_calc(philo->time) >= (philo->tte + elapsed))
 			{
 				pthread_mutex_unlock(&philo->left_fork);
 				pthread_mutex_unlock(philo->right_fork);
 				break ;
 			}
+			// usleep(100);
 		}
-		elapsed = time_calc(philo->time);
-		meals++;
-		printf("%d %d is sleeping\n",
-			time_calc(philo->time), philo->id);
-		// while(1)
-		// {
-			// if((time_calc(philo->time) - elapsed) < 0)
-			// {
-				while(time_calc(philo->time) < elapsed + philo->tts)
-				;
-			// 	philo->dead = true;
-			// }
-			usleep(50);
-		// }
-		elapsed = time_calc(philo->time);
-		printf("%d %d is thinking\n",
-			time_calc(philo->time), philo->id);
-		while(1)
+		if(mutex_dead(0) == true)
+			return (NULL);
+		life = philo->ttd;
+		mutex_meals(1);
+		mutex_print(time_calc(philo->time), philo->id, "is sleeping\n");
+		while(mutex_dead(0) == false)
 		{
-			if(time_calc(philo->time) == elapsed + philo->ttd)
-			{
+			if(life < time_calc(philo->time) - elapsed)
+				mutex_dead(1);
+			// printf("%d < %d - %d %d\n", life, time_calc(philo->time), elapsed, (time_calc(philo->time) - elapsed ));
+			if(time_calc(philo->time) < elapsed + philo->tts)
 				break ;
-			}
+			// usleep(100);
 		}
+		if(mutex_dead(0) == true)
+			return (NULL);
+		life -= time_calc(philo->time);
+		mutex_print(time_calc(philo->time), philo->id, "is thinking\n");
 		elapsed = time_calc(philo->time);
-		life =  philo->ttd;
 	}
 	return (NULL);
 }
-
 
 int	join_thread(t_data *data)
 {
@@ -166,18 +184,11 @@ int main(int argc, char **argv)
 	}
 
 	
-	// while(1)
-	// {
-	// 	i = 0;
-	// 	while(&data.philo[i])
-	// 	{
-	// 		if(data.philo[i].dead == true)
-	// 			printf("%d %d dead\n",
-	// 		time_calc(data.time), data.philo[i].id);
-	// 		i++;
-	// 		usleep(200);
-	// 	}
-	// }
+	while(1)
+	{
+		if(mutex_dead(0) == true)
+			mutex_print(0, 0, "test");
+	}
 	
 	join_thread(&data);
 	
