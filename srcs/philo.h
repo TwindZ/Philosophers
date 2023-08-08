@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/07 11:01:58 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/07 21:39:10 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,6 @@ typedef struct s_param
 	int	nb_time;
 }				t_param;
 
-typedef struct s_time
-{
-	long int	start_sec;
-	long int	start_usec;
-	long int	count_usec;
-}				t_time;
-
 typedef struct s_philo
 {
 	int				id;
@@ -65,10 +58,10 @@ typedef struct s_philo
 typedef struct s_data
 {
 	t_param			param;
-	t_time			time;
 	t_philo			philo[200];
 	pthread_t		thread[200];
 	pthread_mutex_t	main_lock;
+	struct	timeval	time;
 }				t_data;
 
 //---------- univers.c
