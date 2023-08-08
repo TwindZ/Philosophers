@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
+/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/07 21:40:48 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/08 10:22:00 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,19 @@ void	*routine(void *philoptr)
 	{
 		printf("%d %d is sleeping\n",
 			time_calc(philo->time), philo->id);
-		if(life - philo->tts > 0)
+		// if(life - philo->tts > 0)
 			while(time_calc(philo->time) != philo->tts)
 				usleep(1);
-		else
-		{
-			while(time_calc(philo->time) != life)
-			;
-			philo->dead = true;
-		}	
+		// else
+		// {
+		// 	while(time_calc(philo->time) != life)
+		// 	;
+		// 	philo->dead = true;
+		// }	
 				
 	}
 	elapsed = time_calc(philo->time);
-	while(meals != philo->nb_time)
+	while(1 && meals != philo->nb_time)
 	{	
 		ready = 1;
 		while(ready)
@@ -72,23 +72,25 @@ void	*routine(void *philoptr)
 					ready = 0;
 				else
 					pthread_mutex_unlock(&philo->left_fork);
+				// if((life - time_calc(philo->time) - elapsed) < 0)
+				// 	philo->dead = true;
+				// printf("%d - %d - %d = %d\n", life, time_calc(philo->time), elapsed, (life - time_calc(philo->time) - elapsed));
 			}
 			// if(time_calc(philo->time) - elapsed >)
 		}
 		printf("%d %d has taken a fork\n",
 			time_calc(philo->time), philo->id);
-		meals++;
 		elapsed = time_calc(philo->time);
 		printf("%d %d is eating\n",
 			time_calc(philo->time), philo->id);
 		while(1)
 		{
-			if((time_calc(philo->time) - elapsed - philo->tte) < 0)
-			{
-				while(time_calc(philo->time) < elapsed + philo->tts)
-				;
-				philo->dead = true;
-			}
+			// if((time_calc(philo->time) - elapsed - philo->tte) < 0)
+			// {
+			// 	while(time_calc(philo->time) < elapsed + philo->tts)
+			// 	;
+			// 	philo->dead = true;
+			// }
 			if(time_calc(philo->time) == (philo->tte + elapsed))
 			{
 				pthread_mutex_unlock(&philo->left_fork);
@@ -97,18 +99,19 @@ void	*routine(void *philoptr)
 			}
 		}
 		elapsed = time_calc(philo->time);
+		meals++;
 		printf("%d %d is sleeping\n",
 			time_calc(philo->time), philo->id);
-		while(1)
-		{
-			if((time_calc(philo->time) - elapsed) < 0)
-			{
+		// while(1)
+		// {
+			// if((time_calc(philo->time) - elapsed) < 0)
+			// {
 				while(time_calc(philo->time) < elapsed + philo->tts)
 				;
-				philo->dead = true;
-			}
+			// 	philo->dead = true;
+			// }
 			usleep(50);
-		}
+		// }
 		elapsed = time_calc(philo->time);
 		printf("%d %d is thinking\n",
 			time_calc(philo->time), philo->id);
@@ -142,7 +145,7 @@ int	join_thread(t_data *data)
 int main(int argc, char **argv)
 {
 	t_data data;
-	int i;
+	// int i;
 	
 	if(argc < 5 || argc > 6)		
 		return(err_handler(ERRNBPARAM));
@@ -163,18 +166,18 @@ int main(int argc, char **argv)
 	}
 
 	
-	while(1)
-	{
-		i = 0;
-		while(&data.philo[i])
-		{
-			if(data.philo[i].dead == true)
-				printf("%d %d dead\n",
-			time_calc(data.time), data.philo[i].id);
-			i++;
-			usleep(200);
-		}
-	}
+	// while(1)
+	// {
+	// 	i = 0;
+	// 	while(&data.philo[i])
+	// 	{
+	// 		if(data.philo[i].dead == true)
+	// 			printf("%d %d dead\n",
+	// 		time_calc(data.time), data.philo[i].id);
+	// 		i++;
+	// 		usleep(200);
+	// 	}
+	// }
 	
 	join_thread(&data);
 	
