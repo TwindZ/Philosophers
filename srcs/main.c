@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/08 17:30:45 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/09 17:03:01 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,59 +25,40 @@ int	time_calc(struct timeval start_time)
 	
 }
 
-bool	mutex_meals(int opt)
+bool	mutex_dead(t_philo *philo, int opt)
 {
-	t_data	*data;
 	bool	status;
 	
 	status = false;
-	data = struct_data(NULL);
-	pthread_mutex_lock(&data->meals_lock);
+	pthread_mutex_lock(philo->dead_lock);
 	if(opt)
-		data->meals++;
-	else
-		if(data->meals >= data->param.nb_time * data->param.nb_philo)
-			status = true;
-		else
-			status = false;
-	pthread_mutex_unlock(&data->meals_lock);
-	return(status);
-}
-
-bool	mutex_dead(int opt)
-{
-	t_data	*data;
-	bool	status;
-	
-	status = false;
-	data = struct_data(NULL);
-	pthread_mutex_lock(&data->dead_lock);
-	if(opt)
-		data->dead = true;
-	else
-		status = data->dead;
-	pthread_mutex_unlock(&data->dead_lock);
-	return(status);
-}
-
-void	mutex_print(int time, int philo_id, char *msg)
-{
-	t_data *data;
-	
-	data = struct_data(NULL);
-	if(!mutex_dead(0))
 	{
-		pthread_mutex_lock(&data->print_lock);
-		printf("%d %d %s", time, philo_id, msg);
-		pthread_mutex_unlock(&data->print_lock);
+		*philo->dead = true;
+		mutex_print(philo, DEAD, 1);
 	}
+	else
+		status = *philo->dead;
+	pthread_mutex_unlock(philo->dead_lock);
+	return(status);
+}
+
+void	mutex_print(t_philo *philo, char *msg, int opt)
+{
+	pthread_mutex_lock(philo->print_lock);
+	if(mutex_dead(philo, 0) == false)
+		printf("%d %d %s", time_calc(philo->time), philo->id, msg);
+	else if(opt)
+	{
+		printf("%d %d %s", time_calc(philo->time), philo->id, msg);
+	}
+	pthread_mutex_unlock(philo->print_lock);
 	
 }
 //  timestamp_in_ms X has taken a fork
-// ◦ timestamp_in_ms X is eating
-// ◦ timestamp_in_ms X is sleeping
-// ◦ timestamp_in_ms X is thinking
-// ◦ timestamp_in_ms X died
+//  timestamp_in_ms X is eating
+//  timestamp_in_ms X is sleeping
+//  timestamp_in_ms X is thinking
+//  timestamp_in_ms X died
 
 void	*routine(void *philoptr)
 {
@@ -87,61 +68,75 @@ void	*routine(void *philoptr)
 	int	elapsed;
 	int ready;
 	int life;
-	
+
 	ready = 0;
 	elapsed = 0;
-	life = philo->ttd;
+	life = philo->ttd + philo->tts;
 	meals = 0;
 	if(((philo->id % 2)) == 0)
 	{
-		mutex_print(time_calc(philo->time), philo->id, "is thinking\n");
+		life = philo->ttd;
+		mutex_print(philo, THINK, 0);
+		elapsed = time_calc(philo->time);
 		while(1)
 		{
-			if(time_calc(philo->time) >= philo->tte)
-				break;
-			// usleep(100);
+			if(time_calc(philo->time) > (life - elapsed))
+			{
+				if(mutex_dead(philo, 0) == false)
+					mutex_dead(philo, 1);
+				return (NULL);
+			}
+			if(time_calc(philo->time) == philo->tte)
+				break ;
+			usleep(100);
 		}
 	}
 	elapsed = time_calc(philo->time);
 	while(1 && meals != philo->nb_time)
 	{	
 		pthread_mutex_lock(&philo->left_fork);
-		mutex_print(time_calc(philo->time), philo->id, "has taken a fork\n");
+		mutex_print(philo, FORK, 0);
 		pthread_mutex_lock(philo->right_fork);
-		mutex_print(time_calc(philo->time), philo->id, "has taken a fork\n");
-		mutex_print(time_calc(philo->time), philo->id, "is eating\n");
-		life -= time_calc(philo->time);
-		while(mutex_dead(0) == false)
+		mutex_print(philo, FORK, 0);
+		mutex_print(philo, EAT, 0);
+		life = philo->ttd;
+		while(mutex_dead(philo, 0) == false)
 		{
-			if(life < time_calc(philo->time) - elapsed - philo->tts)
-				mutex_dead(1);
-			// printf("%d\n", philo->tts);
-			if(time_calc(philo->time) >= (philo->tte + elapsed))
+			if(time_calc(philo->time) > life + elapsed)
+			{
+				if(mutex_dead(philo, 0) == false)
+					mutex_dead(philo, 1);
+				pthread_mutex_unlock(&philo->left_fork);
+				pthread_mutex_unlock(philo->right_fork);
+				return (NULL);
+			}
+			if(time_calc(philo->time) == (philo->tte + elapsed))
 			{
 				pthread_mutex_unlock(&philo->left_fork);
 				pthread_mutex_unlock(philo->right_fork);
 				break ;
 			}
-			// usleep(100);
+			usleep(100);
 		}
-		if(mutex_dead(0) == true)
+		if(mutex_dead(philo, 0) == true)
 			return (NULL);
-		life = philo->ttd;
-		mutex_meals(1);
-		mutex_print(time_calc(philo->time), philo->id, "is sleeping\n");
-		while(mutex_dead(0) == false)
+		elapsed = time_calc(philo->time);
+		mutex_print(philo, SLEEP, 0);
+		while(mutex_dead(philo, 0) == false)
 		{
-			if(life < time_calc(philo->time) - elapsed)
-				mutex_dead(1);
-			// printf("%d < %d - %d %d\n", life, time_calc(philo->time), elapsed, (time_calc(philo->time) - elapsed ));
-			if(time_calc(philo->time) < elapsed + philo->tts)
+			if(time_calc(philo->time) > (life - philo->tte) + elapsed)
+			{
+				if(mutex_dead(philo, 0) == false)
+					mutex_dead(philo, 1);
+				return (NULL);
+			}
+			if(time_calc(philo->time) == elapsed + philo->tts)
 				break ;
-			// usleep(100);
-		}
-		if(mutex_dead(0) == true)
+			usleep(100);
+			}	
+		if(mutex_dead(philo, 0) == true)
 			return (NULL);
-		life -= time_calc(philo->time);
-		mutex_print(time_calc(philo->time), philo->id, "is thinking\n");
+		mutex_print(philo, THINK, 0);
 		elapsed = time_calc(philo->time);
 	}
 	return (NULL);
@@ -182,14 +177,19 @@ int main(int argc, char **argv)
 		// printf("philo #%d status : %d\n", data.philo[i].id, data.philo[i].dead);
 		// printf("left fork :%p right fork : %p\n", &data.philo[i].left_fork, data.philo[i].right_fork);
 	}
-
-	
 	while(1)
 	{
-		if(mutex_dead(0) == true)
-			mutex_print(0, 0, "test");
+		pthread_mutex_lock(&data.dead_lock);
+		if(data.dead == true)
+		{
+			pthread_mutex_unlock(&data.dead_lock);
+			pthread_mutex_unlock(&data.print_lock);
+			break;
+		}	
+		pthread_mutex_unlock(&data.dead_lock);
+			
+		usleep(50);
 	}
-	
 	join_thread(&data);
 	
 	//**//**//** destroy thread **//**//**//

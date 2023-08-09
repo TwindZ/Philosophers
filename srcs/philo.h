@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/08 17:14:35 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/09 16:21:29 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,15 @@
 [time_to_die] [time_to_eat] [time_to_sleep] \
 [number_of_times_each_philosopher_must_eat(optional)]\n"
 
-# define ERRINTMAX "parameter must be under max integer"
+# define ERRINTMAX "parameter must be under max integer\n"
 # define ERRONLYNB "only positif numeric argument are used by philo\n"
 # define ERRMAXVAL "too high parameter value\n"
+
+# define THINK "is thinking\n"
+# define SLEEP "is sleeping\n"
+# define EAT "is eating\n"
+# define FORK "has taken a fork\n"
+# define DEAD "dead\n"
 
 //---------- INCLUDE
 # include <fcntl.h>
@@ -47,6 +53,8 @@ typedef struct s_philo
 	int				id;
 	pthread_mutex_t left_fork;
 	pthread_mutex_t *right_fork;
+	pthread_mutex_t *print_lock;
+	pthread_mutex_t *dead_lock;
 	bool			*dead;
 	int				ttd;
 	int				tte;
@@ -62,7 +70,6 @@ typedef struct s_data
 	pthread_t		thread[200];
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	dead_lock;
-	pthread_mutex_t	meals_lock;
 	struct	timeval	time;
 	bool			dead;
 	int				meals;
@@ -96,6 +103,7 @@ void		*routine(void	*data);
 void		ft_init_philo(t_data *data, t_philo *philo);
 int			time_calc(struct timeval start_time);
 void		ft_init_fork(t_data *data);
+void		mutex_print(t_philo *philo, char *msg, int opt);
 
 //---------- utility.c
 long int	ft_max_min(long int nbr);
