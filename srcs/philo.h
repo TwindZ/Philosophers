@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/09 16:21:29 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/10 11:10:38 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,20 @@ typedef struct s_param
 	int	nb_time;
 }				t_param;
 
+typedef struct s_fork
+{
+	pthread_mutex_t fork;
+	bool			locked;
+}				t_fork;
+
 typedef struct s_philo
 {
 	int				id;
-	pthread_mutex_t left_fork;
-	pthread_mutex_t *right_fork;
+	t_fork			left_fork;
+	t_fork			*right_fork;
 	pthread_mutex_t *print_lock;
 	pthread_mutex_t *dead_lock;
+	pthread_mutex_t *fork_lock;
 	bool			*dead;
 	int				ttd;
 	int				tte;
@@ -70,6 +77,7 @@ typedef struct s_data
 	pthread_t		thread[200];
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	dead_lock;
+	pthread_mutex_t	fork_lock;
 	struct	timeval	time;
 	bool			dead;
 	int				meals;

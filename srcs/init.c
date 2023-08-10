@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/09 16:14:06 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/10 11:11:01 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ void	ft_init_philo(t_data *data, t_philo *philo)
 		philo[i].dead = &data->dead;
 		philo[i].print_lock = &data->print_lock;
 		philo[i].dead_lock = &data->dead_lock;
-		pthread_mutex_init(&philo[i].left_fork, NULL);
+		philo[i].fork_lock = &data->fork_lock;
+		pthread_mutex_init(&philo[i].left_fork.fork, NULL);
 		if(i == data->param.nb_philo - 1)
 			philo[0].right_fork = &philo[i].left_fork;
 		else
