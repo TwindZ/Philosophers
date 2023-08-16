@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/16 11:03:56 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:12:46 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ int	build_base_param(t_data *data, char **argv)
 	check_max_param(&data->param.tte, argv[3]);
 	check_max_param(&data->param.tts, argv[4]);
 	if(argv[5])
-		check_max_param(&data->param.nb_time, argv[5]);
+	{
+		if(ft_atoi(argv[5]) > 0 && ft_atoi(argv[5]) <= INT_MAX)
+			data->param.nb_time = ft_atoi(argv[5]);
+	}
 	else
 		data->param.nb_time = -2;
 	if (data->param.nb_philo == -1 || data->param.ttd == -1 
