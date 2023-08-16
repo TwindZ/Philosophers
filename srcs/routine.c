@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 10:31:24 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/16 11:20:57 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/16 14:22:44 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	*routine(void *philoptr)
 		if(philo_sleep(philo))
 			return (NULL);
 		mutex_print(philo, THINK);
-		usleep(50);
+		usleep(100);
 	}
 	return (NULL);
 }
