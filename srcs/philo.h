@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/16 11:00:50 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/16 17:00:15 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@
 typedef struct s_param
 {
 	int	nb_philo;
-	int	ttd;
-	int	tts;
-	int	tte;
+	time_t	ttd;
+	time_t	tts;
+	time_t	tte;
 	int	nb_time;
 }				t_param;
 
@@ -61,15 +61,15 @@ typedef struct s_philo
 	t_fork			left_fork;
 	t_fork			*right_fork;
 	pthread_mutex_t *print_lock;
-	pthread_mutex_t *dead_lock;
-	pthread_mutex_t *fork_lock;
+	pthread_mutex_t *meal_lock;
+	time_t			ttd;
+	time_t			tte;
+	time_t			tts;
 	bool			*dead;
-	int				ttd;
-	int				tte;
-	int				tts;
 	int				nb_time;
-	time_t			elapsed;
-	struct	timeval	time;
+	int				nb_philo;
+	time_t			last_meal;
+	time_t			start;
 }				t_philo;
 
 typedef struct s_data
@@ -78,9 +78,9 @@ typedef struct s_data
 	t_philo			philo[200];
 	pthread_t		thread[200];
 	pthread_mutex_t	print_lock;
-	pthread_mutex_t	dead_lock;
+	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	fork_lock;
-	struct	timeval	time;
+	time_t			start;
 	bool			dead;
 	int				meals;
 	
@@ -105,11 +105,13 @@ int			err_handler(char *msg);
 int			time_calc(struct timeval start_time);
 bool		mutex_dead(t_philo *philo, int opt);
 void		mutex_print(t_philo *philo, char *msg);
+time_t		get_time(void);
+void		new_sleep(unsigned long duration, t_philo *philo);
 
 //---------- init_data.c
 int			digit_argv(char **argv);
 long int	ft_max_min(long int nbr);
-void		check_max_param(int *param, char *arg);
+void		check_max_param(time_t *param, char *arg);
 int			build_base_param(t_data *data, char **argv);
 t_data		*ft_init_data(t_data *data, char **argv);
 t_data		*struct_data(t_data *ptr);
@@ -132,7 +134,6 @@ void		process_start(t_data *data);
 void		clean_mutex(t_data *data);
 
 //---------- routine.c
-int	philo_think_and_fork(t_philo *philo);
 int	philo_eat(t_philo *philo);
 int	philo_sleep(t_philo *philo);
 void	*routine(void *philoptr);
