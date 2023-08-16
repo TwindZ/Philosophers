@@ -6,7 +6,7 @@
 #    By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/04 10:27:08 by emlamoth          #+#    #+#              #
-#    Updated: 2023/08/03 13:07:59 by emlamoth         ###   ########.fr        #
+#    Updated: 2023/08/16 10:44:06 by emlamoth         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,8 @@ SRCS =	debug.c		\
 		main.c		\
 		util.c		\
 		util2.c	\
+		thread_util.c \
+		routine.c \
 
 HDRS = ./srcs/philo.h
 
@@ -24,7 +26,7 @@ OBJS = $(SRCS:$(SCRS_DIR)%.c=$(OBJS_DIR)%.o)
 
 NAME = philo
 
-CFLAGS = -Wall -Wextra -Werror -pthread -g
+CFLAGS = -Wall -Wextra -Werror -pthread -fsanitize=thread
 
 CC = gcc
 

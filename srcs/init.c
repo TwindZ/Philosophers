@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/10 11:11:01 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/16 11:03:56 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	digit_argv(char **argv)
 }
 long int ft_max_min(long int nbr)
 {
-	if(nbr >= -2147483648 && nbr <= 2147483647)
+	if(nbr >= 60 && nbr <= 2147483647)
 		return(1);
 	return(0);
 }
@@ -51,7 +51,8 @@ void	check_max_param(int *param, char *arg)
 
 int	build_base_param(t_data *data, char **argv)
 {
-	check_max_param(&data->param.nb_philo, argv[1]);
+	if(ft_atoi(argv[1]) <= 200)
+		data->param.nb_philo = ft_atoi(argv[1]);
 	check_max_param(&data->param.ttd, argv[2]);
 	check_max_param(&data->param.tte, argv[3]);
 	check_max_param(&data->param.tts, argv[4]);
@@ -77,8 +78,11 @@ t_data	*struct_data(t_data *ptr)
 
 t_data *ft_init_data(t_data *data, char **argv)
 {
-	build_base_param(data, argv);
-
+	if(build_base_param(data, argv) == -1)
+		return (NULL);
+	pthread_mutex_init(&data->dead_lock, NULL);
+	pthread_mutex_init(&data->fork_lock, NULL);
+	pthread_mutex_init(&data->print_lock, NULL);
 	struct_data(data);
 	return(data);
 }

@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/10 11:10:38 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/16 11:00:50 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # define ERRINTMAX "parameter must be under max integer\n"
 # define ERRONLYNB "only positif numeric argument are used by philo\n"
-# define ERRMAXVAL "too high parameter value\n"
+# define ERRMAXVAL "200 philo max and between 60 and MAXINT ms\n"
 
 # define THINK "is thinking\n"
 # define SLEEP "is sleeping\n"
@@ -37,6 +37,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <stdbool.h>
+# include <limits.h>
 
 //---------- STRUCT
 typedef struct s_param
@@ -67,6 +68,7 @@ typedef struct s_philo
 	int				tte;
 	int				tts;
 	int				nb_time;
+	time_t			elapsed;
 	struct	timeval	time;
 }				t_philo;
 
@@ -94,9 +96,15 @@ void		bigcrunch(t_data *data);
 //---------- debug.c
 void		print_param(t_data *data);
 
-//---------- ft_atoi.c
+//---------- util2.c
 int			ft_isdigit(int c);
 long int	ft_atoi(const char *str);
+
+//---------- util.c
+int			err_handler(char *msg);
+int			time_calc(struct timeval start_time);
+bool		mutex_dead(t_philo *philo, int opt);
+void		mutex_print(t_philo *philo, char *msg);
 
 //---------- init_data.c
 int			digit_argv(char **argv);
@@ -111,11 +119,22 @@ void		*routine(void	*data);
 void		ft_init_philo(t_data *data, t_philo *philo);
 int			time_calc(struct timeval start_time);
 void		ft_init_fork(t_data *data);
-void		mutex_print(t_philo *philo, char *msg, int opt);
+void		mutex_print(t_philo *philo, char *msg);
+bool		take_fork(t_philo *philo);
+void		drop_fork(t_philo *philo);
 
 //---------- utility.c
 long int	ft_max_min(long int nbr);
-int			err_handler(char *msg);
 
+//---------- thread_util.c
+int			join_thread(t_data *data);
+void		process_start(t_data *data);
+void		clean_mutex(t_data *data);
+
+//---------- routine.c
+int	philo_think_and_fork(t_philo *philo);
+int	philo_eat(t_philo *philo);
+int	philo_sleep(t_philo *philo);
+void	*routine(void *philoptr);
 
 #endif
