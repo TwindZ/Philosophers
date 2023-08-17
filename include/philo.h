@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 15:39:09 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/17 16:29:50 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 
 # define ERRINTMAX "parameter must be under max integer\n"
 # define ERRONLYNB "only positif numeric argument are used by philo\n"
-# define ERRMAXVAL "parameter must be between 1 to 1000 philo and 60 to \
-100000000 ms\n"
+# define ERRMAXVAL "parameter must be between 1 and 1000 philos and between 60 \
+and 100000000 ms\n"
 
 # define THINK "is thinking\n"
 # define SLEEP "is sleeping\n"
@@ -50,17 +50,11 @@ typedef struct s_param
 	int				nb_time;
 }				t_param;
 
-typedef struct s_fork
-{
-	pthread_mutex_t	fork;
-	bool			locked;
-}				t_fork;
-
 typedef struct s_philo
 {
 	int				id;
-	t_fork			left_fork;
-	t_fork			*right_fork;
+	pthread_mutex_t	left_fork;
+	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*print_lock;
 	pthread_mutex_t	*meal_lock;
 	time_t			ttd;
@@ -71,7 +65,7 @@ typedef struct s_philo
 	int				nb_philo;
 	time_t			last_meal;
 	time_t			start;
-}					t_philo;
+}				t_philo;
 
 typedef struct s_data
 {
@@ -80,49 +74,40 @@ typedef struct s_data
 	pthread_t		thread[1000];
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	meal_lock;
-	pthread_mutex_t	fork_lock;
 	time_t			start;
 	bool			dead;
-	int				meals;
 }				t_data;
 
-//---------- debug.c
-void		print_param(t_data *data);
-
-//---------- util2.c
-int			ft_isdigit(int c);
-long int	ft_atoi(const char *str);
-
-//---------- util.c
-int			err_handler(char *msg);
-bool		mutex_dead(t_philo *philo);
-void		mutex_print(t_philo *philo, char *msg);
-time_t		get_time(void);
-void		new_sleep(unsigned long duration, t_philo *philo);
-
 //---------- init.c
-int			digit_argv(char **argv);
-long int	ft_max_min(long int nbr);
 void		check_max_param(time_t *param, char *arg);
 int			build_base_param(t_data *data, char **argv);
-void		init_philo(t_data *data, t_philo *philo);
 t_data		*init_data(t_data *data, char **argv);
-t_data		*struct_data(t_data *ptr);
+void		init_philo(t_data *data, t_philo *philo);
 
 //---------- main.c
-
-//---------- thread_util.c
-int			join_thread(t_data *data);
-void		monitoring(t_data *data);
 void		process_start(t_data *data);
+int			join_thread(t_data *data);
 void		clean_mutex(t_data *data);
+
+//---------- monitoring.c
+bool		philo_dead(t_philo *philo);
+void		monitoring(t_data *data);
 
 //---------- routine.c
 void		*philo_alone(void *philoptr);
 void		philo_eat(t_philo *philo);
-int			philo_sleep(t_philo *philo);
 void		*routine(void *philoptr);
 
-//---------- monitoring.c
-void		monitoring(t_data *data);
+//---------- util.c
+int			err_handler(char *msg);
+time_t		get_time(void);
+void		new_sleep(unsigned long duration, t_philo *philo);
+bool		mutex_dead(t_philo *philo);
+void		mutex_print(t_philo *philo, char *msg);
+
+//---------- util2.c
+int			digit_argv(char **argv);
+int			ft_isdigit(int c);
+long int	ft_atoi(const char *str);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 15:39:04 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/17 16:30:51 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ t_data	*init_data(t_data *data, char **argv)
 	if (build_base_param(data, argv) == -1)
 		return (NULL);
 	pthread_mutex_init(&data->meal_lock, NULL);
-	pthread_mutex_init(&data->fork_lock, NULL);
 	pthread_mutex_init(&data->print_lock, NULL);
 	return (data);
 }
@@ -76,7 +75,7 @@ void	init_philo(t_data *data, t_philo *philo)
 		philo[i].dead = &data->dead;
 		philo[i].print_lock = &data->print_lock;
 		philo[i].meal_lock = &data->meal_lock;
-		pthread_mutex_init(&philo[i].left_fork.fork, NULL);
+		pthread_mutex_init(&philo[i].left_fork, NULL);
 		if (i == data->param.nb_philo - 1)
 			philo[0].right_fork = &philo[i].left_fork;
 		else

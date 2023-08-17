@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 15:25:40 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/17 16:37:48 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,7 @@ int	join_thread(t_data *data)
 
 	i = 0;
 	while (i < data->param.nb_philo)
-	{
-		pthread_join(data->thread[i], NULL);
-		i++;
-	}
+		pthread_join(data->thread[i++], NULL);
 	return (1);
 }
 
@@ -55,11 +52,7 @@ void	clean_mutex(t_data *data)
 
 	i = 0;
 	while (i < data->param.nb_philo)
-	{
-		pthread_mutex_destroy(&data->philo[i].left_fork.fork);
-		i++;
-	}
-	pthread_mutex_destroy(&data->fork_lock);
+		pthread_mutex_destroy(&data->philo[i++].left_fork);
 	pthread_mutex_destroy(&data->meal_lock);
 	pthread_mutex_destroy(&data->print_lock);
 }

@@ -6,7 +6,7 @@
 /*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:25:13 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 15:47:41 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/17 16:42:08 by emlamoth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ bool	philo_dead(t_philo *philo)
 	{
 		if (philo->id != 0)
 		{
-			printf("%ld %d %s", get_time() - philo->start,
-				philo->id, "dead\n");
+			printf("%ld %d %s", get_time() - philo->start, philo->id, "dead\n");
 			*philo->dead = true;
 		}
 		pthread_mutex_unlock(philo->meal_lock);
