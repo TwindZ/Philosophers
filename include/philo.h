@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 16:29:50 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/17 20:00:50 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-# define ERRNBPARAM "parameter error\n./philo [number_of_philosophers] \
+# define ERRNBPARAM "Parameter error\nUsage:./philo [number_of_philosophers] \
 [time_to_die] [time_to_eat] [time_to_sleep] \
 [number_of_times_each_philosopher_must_eat(optional)]\n"
 
-# define ERRINTMAX "parameter must be under max integer\n"
-# define ERRONLYNB "only positif numeric argument are used by philo\n"
-# define ERRMAXVAL "parameter must be between 1 and 1000 philos and between 60 \
+# define ERRINTMAX "Parameter must be under max integer\n"
+# define ERRONLYNB "All parameters must be positive numerics.\n"
+# define ERRMAXVAL "Parameters must be between 1 and 1000 philos and between 60 \
 and 100000000 ms\n"
 
 # define THINK "is thinking\n"
@@ -108,6 +108,6 @@ void		mutex_print(t_philo *philo, char *msg);
 //---------- util2.c
 int			digit_argv(char **argv);
 int			ft_isdigit(int c);
-long int	ft_atoi(const char *str);
+long int	ft_atol(const char *str);
 
 #endif

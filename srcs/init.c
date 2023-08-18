@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 16:30:51 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/17 20:01:21 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	check_max_param(time_t *param, char *arg)
 {
 	time_t	nbr;
 
-	nbr = (time_t)ft_atoi(arg);
+	nbr = (time_t)ft_atol(arg);
 	if (nbr >= 60 && nbr <= 100000000)
 		*param = nbr;
 	else
@@ -25,8 +25,8 @@ void	check_max_param(time_t *param, char *arg)
 
 int	build_base_param(t_data *data, char **argv)
 {
-	if (ft_atoi(argv[1]) <= 1000 && ft_atoi(argv[1]) > 0)
-		data->param.nb_philo = ft_atoi(argv[1]);
+	if (ft_atol(argv[1]) <= 1000 && ft_atol(argv[1]) > 0)
+		data->param.nb_philo = ft_atol(argv[1]);
 	else
 		data->param.nb_philo = -1;
 	check_max_param(&data->param.ttd, argv[2]);
@@ -34,9 +34,9 @@ int	build_base_param(t_data *data, char **argv)
 	check_max_param(&data->param.tts, argv[4]);
 	if (argv[5])
 	{
-		if (ft_atoi(argv[5]) >= 1 && ft_atoi(argv[5]) <= INT_MAX)
-			data->param.nb_time = ft_atoi(argv[5]);
-		else if (ft_atoi(argv[5]) == 0)
+		if (ft_atol(argv[5]) >= 1 && ft_atol(argv[5]) <= INT_MAX)
+			data->param.nb_time = ft_atol(argv[5]);
+		else if (ft_atol(argv[5]) == 0)
 			return (-1);
 		else
 			data->param.nb_time = -1;
