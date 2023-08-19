@@ -6,7 +6,7 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 20:00:50 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/19 12:45:44 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ typedef struct s_data
 }				t_data;
 
 //---------- init.c
-void		check_max_param(time_t *param, char *arg);
-int			build_base_param(t_data *data, char **argv);
+void		limit_value(time_t *param, char *arg);
+int			parsing(t_data *data, char **argv);
 t_data		*init_data(t_data *data, char **argv);
 void		init_philo(t_data *data, t_philo *philo);
 
@@ -101,7 +101,7 @@ void		*routine(void *philoptr);
 //---------- util.c
 int			err_handler(char *msg);
 time_t		get_time(void);
-void		new_sleep(unsigned long duration, t_philo *philo);
+void		ms_sleep(unsigned long duration, t_philo *philo);
 bool		mutex_dead(t_philo *philo);
 void		mutex_print(t_philo *philo, char *msg);
 

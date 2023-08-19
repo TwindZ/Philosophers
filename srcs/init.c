@@ -6,13 +6,13 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 20:01:21 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/19 11:58:59 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	check_max_param(time_t *param, char *arg)
+void	limit_value(time_t *param, char *arg)
 {
 	time_t	nbr;
 
@@ -23,15 +23,15 @@ void	check_max_param(time_t *param, char *arg)
 		*param = -1;
 }
 
-int	build_base_param(t_data *data, char **argv)
+int	parsing(t_data *data, char **argv)
 {
 	if (ft_atol(argv[1]) <= 1000 && ft_atol(argv[1]) > 0)
 		data->param.nb_philo = ft_atol(argv[1]);
 	else
 		data->param.nb_philo = -1;
-	check_max_param(&data->param.ttd, argv[2]);
-	check_max_param(&data->param.tte, argv[3]);
-	check_max_param(&data->param.tts, argv[4]);
+	limit_value(&data->param.ttd, argv[2]);
+	limit_value(&data->param.tte, argv[3]);
+	limit_value(&data->param.tts, argv[4]);
 	if (argv[5])
 	{
 		if (ft_atol(argv[5]) >= 1 && ft_atol(argv[5]) <= INT_MAX)
@@ -52,7 +52,7 @@ int	build_base_param(t_data *data, char **argv)
 
 t_data	*init_data(t_data *data, char **argv)
 {
-	if (build_base_param(data, argv) == -1)
+	if (parsing(data, argv) == -1)
 		return (NULL);
 	pthread_mutex_init(&data->meal_lock, NULL);
 	pthread_mutex_init(&data->print_lock, NULL);

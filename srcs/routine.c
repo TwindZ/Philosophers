@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 10:31:24 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 16:30:24 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/19 12:38:02 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*philo_alone(void *philoptr)
 	philo = (t_philo *)philoptr;
 	pthread_mutex_lock(&philo->left_fork);
 	mutex_print(philo, FORK);
-	new_sleep(philo->ttd, philo);
+	ms_sleep(philo->ttd, philo);
 	pthread_mutex_unlock(&philo->left_fork);
 	return (NULL);
 }
@@ -34,7 +34,7 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_lock(philo->meal_lock);
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(philo->meal_lock);
-	new_sleep(philo->tte, philo);
+	ms_sleep(philo->tte, philo);
 	pthread_mutex_unlock(&philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
 }
@@ -47,7 +47,7 @@ void	*routine(void *philoptr)
 	if (((philo->id % 2) == 1))
 	{
 		mutex_print(philo, THINK);
-		new_sleep(philo->tte, philo);
+		ms_sleep(philo->tte, philo);
 	}
 	while (1)
 	{
@@ -59,7 +59,7 @@ void	*routine(void *philoptr)
 		if (mutex_dead(philo) == true || philo->id == 0)
 			return (NULL);
 		mutex_print(philo, SLEEP);
-		new_sleep(philo->tts, philo);
+		ms_sleep(philo->tts, philo);
 		mutex_print(philo, THINK);
 		if (mutex_dead(philo) == true || philo->id == 0)
 			return (NULL);

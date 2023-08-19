@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 13:54:21 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 15:48:04 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/19 12:38:22 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ time_t	get_time(void)
 	return ((time.tv_sec * (unsigned long)1000) + (time.tv_usec / 1000));
 }
 
-void	new_sleep(unsigned long duration, t_philo *philo)
+void	ms_sleep(unsigned long duration, t_philo *philo)
 {
 	unsigned long	start;
 

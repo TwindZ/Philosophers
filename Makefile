@@ -3,19 +3,19 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+         #
+#    By: emman <emman@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/04 10:27:08 by emlamoth          #+#    #+#              #
-#    Updated: 2023/08/17 16:16:27 by emlamoth         ###   ########.fr        #
+#    Updated: 2023/08/19 12:49:09 by emman            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS =	init.c			\
 		main.c			\
+		monitoring.c	\
 		routine.c		\
 		util.c			\
 		util2.c			\
-		monitoring.c	\
 
 HDRS = ./include/philo.h
 
@@ -39,7 +39,7 @@ $(OBJS_DIR)%.o:$(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
 	@$(CC) $(CFLAGS) -c -o $@ $<
 	
-$(NAME): $(OBJS) $(HDRS)
+$(NAME):$(HDRS) $(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 	@echo "${GREEN}PHILO COMPILED${NC}"
 
