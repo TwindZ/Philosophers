@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:25:13 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 16:42:08 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/20 12:01:23 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*This function checks if a philosopher is dead and raises the 'dead' flag
+to stop the simulation*/
 bool	philo_dead(t_philo *philo)
 {
 	if ((get_time() - philo->last_meal) >= philo->ttd)
@@ -26,7 +28,8 @@ bool	philo_dead(t_philo *philo)
 	}
 	return (false);
 }
-
+/*This function monitors the death status of philosophers and checks 
+if the number of eating times is completed for each philosopher*/
 void	monitoring(t_data *data)
 {
 	int	i;

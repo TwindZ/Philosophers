@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emlamoth <emlamoth@student.42.fr>          +#+  +:+       +#+        */
+/*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/28 12:33:04 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 16:37:48 by emlamoth         ###   ########.fr       */
+/*   Updated: 2023/08/20 12:29:47 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*This function creates threads and initializes the start time for each one*/
 void	process_start(t_data *data)
 {
 	int	i;
@@ -35,7 +36,7 @@ void	process_start(t_data *data)
 		}
 	}
 }
-
+/* This function joins threads together after their execution. */
 int	join_thread(t_data *data)
 {
 	int	i;
@@ -46,6 +47,7 @@ int	join_thread(t_data *data)
 	return (1);
 }
 
+/* This function cleans up all mutexes by destroying them. */
 void	clean_mutex(t_data *data)
 {
 	int	i;

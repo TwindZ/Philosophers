@@ -6,7 +6,7 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 13:54:21 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/19 12:38:22 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/20 12:19:44 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	err_handler(char *msg)
 	return (-1);
 }
 
+/* This function retrieves the time of day in milliseconds. */
 time_t	get_time(void)
 {
 	struct timeval	time;
@@ -26,6 +27,8 @@ time_t	get_time(void)
 	return ((time.tv_sec * (unsigned long)1000) + (time.tv_usec / 1000));
 }
 
+/*This function operates similarly to the 'usleep' function,
+but the time is specified in milliseconds.*/
 void	ms_sleep(unsigned long duration, t_philo *philo)
 {
 	unsigned long	start;
@@ -39,6 +42,8 @@ void	ms_sleep(unsigned long duration, t_philo *philo)
 	}
 }
 
+/* This functionc check the dead status using a mutex to avoid interleaved output from
+multiple threads. */
 bool	mutex_dead(t_philo *philo)
 {
 	bool	status;
@@ -50,6 +55,8 @@ bool	mutex_dead(t_philo *philo)
 	return (status);
 }
 
+/* This function print using a mutex to avoid interleaved output from
+multiple threads. */
 void	mutex_print(t_philo *philo, char *msg)
 {
 	time_t	timestamp;

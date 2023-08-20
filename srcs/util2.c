@@ -6,12 +6,14 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 12:42:26 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/19 22:56:08 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/20 12:24:57 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*This function checks if all the elements in argv, except argv[0],
+contain only numeric values.*/
 int	digit_argv(char **argv)
 {
 	int	i;
@@ -39,11 +41,12 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-int long	ft_atoi(const char *str)
+/* This function converts a string to a long int. */
+long int	ft_atol(const char *str)
 {
 	int			i;
 	int			s;
-	int long	num;
+	long int	num;
 
 	i = 0;
 	s = 1;

@@ -6,12 +6,13 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/16 10:31:24 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/19 12:38:02 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/20 12:38:00 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/* Routine for an individual philosopher */
 void	*philo_alone(void *philoptr)
 {
 	t_philo	*philo;
@@ -24,6 +25,7 @@ void	*philo_alone(void *philoptr)
 	return (NULL);
 }
 
+/* Eating part of the routine includes taking both forks and their disposal */
 void	philo_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->left_fork);
@@ -39,6 +41,9 @@ void	philo_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->right_fork);
 }
 
+/* The routine function makes all odd-numbered philosophers think and the
+even-numbered ones to take forks and start eating for better efficiency.
+Mutexes are used heavily to avoid race conditions between threads.*/
 void	*routine(void *philoptr)
 {
 	t_philo	*philo;
