@@ -6,7 +6,7 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 09:55:42 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/19 12:45:44 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/19 22:56:14 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,6 @@ void		mutex_print(t_philo *philo, char *msg);
 //---------- util2.c
 int			digit_argv(char **argv);
 int			ft_isdigit(int c);
-long int	ft_atol(const char *str);
+long int	ft_atoi(const char *str);
 
 #endif

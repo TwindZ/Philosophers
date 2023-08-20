@@ -6,7 +6,7 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 12:42:26 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/17 20:00:23 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/19 22:56:08 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-int long	ft_atol(const char *str)
+int long	ft_atoi(const char *str)
 {
 	int			i;
 	int			s;

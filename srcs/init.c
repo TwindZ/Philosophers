@@ -6,7 +6,7 @@
 /*   By: emman <emman@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:42:50 by emlamoth          #+#    #+#             */
-/*   Updated: 2023/08/19 11:58:59 by emman            ###   ########.fr       */
+/*   Updated: 2023/08/19 22:55:55 by emman            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	limit_value(time_t *param, char *arg)
 {
 	time_t	nbr;
 
-	nbr = (time_t)ft_atol(arg);
+	nbr = (time_t)ft_atoi(arg);
 	if (nbr >= 60 && nbr <= 100000000)
 		*param = nbr;
 	else
@@ -25,8 +25,8 @@ void	limit_value(time_t *param, char *arg)
 
 int	parsing(t_data *data, char **argv)
 {
-	if (ft_atol(argv[1]) <= 1000 && ft_atol(argv[1]) > 0)
-		data->param.nb_philo = ft_atol(argv[1]);
+	if (ft_atoi(argv[1]) <= 1000 && ft_atoi(argv[1]) > 0)
+		data->param.nb_philo = ft_atoi(argv[1]);
 	else
 		data->param.nb_philo = -1;
 	limit_value(&data->param.ttd, argv[2]);
@@ -34,9 +34,9 @@ int	parsing(t_data *data, char **argv)
 	limit_value(&data->param.tts, argv[4]);
 	if (argv[5])
 	{
-		if (ft_atol(argv[5]) >= 1 && ft_atol(argv[5]) <= INT_MAX)
-			data->param.nb_time = ft_atol(argv[5]);
-		else if (ft_atol(argv[5]) == 0)
+		if (ft_atoi(argv[5]) >= 1 && ft_atoi(argv[5]) <= INT_MAX)
+			data->param.nb_time = ft_atoi(argv[5]);
+		else if (ft_atoi(argv[5]) == 0)
 			return (-1);
 		else
 			data->param.nb_time = -1;
